@@ -36,6 +36,7 @@ SharedPtr<T> SharedPtr<T>::make_shared(Args&&... args)
     T* data = static_cast<T*>(static_cast<void*>(count + 1));
 
     *count = 1;
+    // Initialize data zone (like real make_shared) -> avoid copy/move ctor
     new (data) T(std::forward<Args>(args)...);
 
     return SharedPtr<T>(count, data);
