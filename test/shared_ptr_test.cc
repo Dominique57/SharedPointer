@@ -86,3 +86,31 @@ TEST(SharedPtr, copyCtorCheckRefCountAfterDeletingOriginal)
     // THEN
     ASSERT_EQ(1, var.ref_count_get());
 }
+
+TEST(SharedPtr, testMakeShared)
+{
+    // GIVEN
+    int arg = 10;
+    // WHEN
+    SharedPtr<int> var = SharedPtr<int>::make_shared(arg);
+    // THEN
+    ASSERT_EQ(arg, *var);
+}
+
+TEST(SharedPtr, testMakeSharedStruct)
+{
+    // GIVEN
+    struct test
+    {
+        test(int a, int b, int c) : a(a), b(b), c(c) {}
+        test(test&) = delete;
+        test(test&&) = delete;
+        int a, b, c;
+    };
+    // WHEN
+    SharedPtr<test> var = SharedPtr<test>::make_shared(1, 2, 3);
+    // THEN
+    ASSERT_EQ(1, var->a);
+    ASSERT_EQ(2, var->b);
+    ASSERT_EQ(3, var->c);
+}
